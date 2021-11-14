@@ -227,7 +227,7 @@
     - Create file call `test-v2`
 
       ```sh
-      touch test-v1
+      touch test-v2
       ```
 
     - Add following content `test-v2`
