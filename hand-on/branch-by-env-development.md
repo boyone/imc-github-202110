@@ -35,13 +35,26 @@
       require github.com/go-chi/chi v1.5.4
       ```
 
-   3. Create file call `main.go`
+   3. Create file call `go.sum`
+
+      ```sh
+      touch go.mod
+      ```
+
+   4. Add following content to `go.sum`
+
+      ```txt
+      github.com/go-chi/chi v1.5.4 h1:QHdzF2szwjqVV4wmByUnTcsbIg7UGaQ0tPF2t5GcAIs=
+      github.com/go-chi/chi v1.5.4/go.mod h1:uaf8YgoFazUOkPBG7fxPftUylNumIev9awIWOENIuEg=
+      ```
+
+   5. Create file call `main.go`
 
       ```sh
       touch main.go
       ```
 
-   4. Add following lines to `main.go`
+   6. Add following lines to `main.go`
 
       ```go
       package main
@@ -110,14 +123,28 @@
       curl http://localhost:3000/api/v1/greeting?name=boyone
       ```
 
-   3. Add test command to test-v1 file
+      - Create file call `test-v1`
 
-      ```sh
-      echo "curl http://localhost:3000/api/v1/greeting?name=boyone" > test-v1
-      ```
+        ```sh
+        touch test-v1
+        ```
+
+      - Add following content `test-v1`
+
+        ```sh
+        echo "echo expected: \n" > test-v1
+        echo "echo Hello boyone\n" >> test-v1
+        echo "echo got:" >> test-v1
+        echo "curl http://localhost:3000/api/v1/greeting?name=boyone" >> test-v1
+        ```
+
+      - Run test
+
+        ```sh
+        sh test-v1
+        ```
 
 7. Commit
-
 8. Create remote repository
 9. Add team members to remote repository
 10. Add remote repository
@@ -157,7 +184,7 @@
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
+      sh test-v1
       ```
 
     - Commit
@@ -205,18 +232,39 @@
        }
        ```
 
+    3. Add test hello-api.v2
+
+    ```sh
+    curl http://localhost:3000/api/v1/greeting?name=boyone
+    ```
+
+    - Create file call `test-v2`
+
+      ```sh
+      touch test-v2
+      ```
+
+    - Add following content `test-v2`
+
+      ```sh
+      echo "echo expected: \n" > test-v2
+      echo 'echo {\"message\":\"Hello boyone\"}\n' >> test-v2
+      echo "echo got:" >> test-v2
+      echo "curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ \"name\": \"boyone\" }'" >> test-v2
+      ```
+
+    - Run test
+
+      ```sh
+      sh test-v2
+      ```
+
     - Build artifacts
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
-      curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ "name": "boyone" }'
-      ```
-
-    - Add test command to test-v1 file
-
-      ```sh
-      echo "curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ \"name\": \"boyone\" }'" > test-v2
+      sh test-v1
+      sh test-v2
       ```
 
     - Commit
@@ -239,35 +287,53 @@
      }
     ```
 
+22. Update test script
+
+    ```sh
+    echo "echo expected: \n" > test-v1
+    echo "echo Hello boyone\!\n" >> test-v1
+    echo "echo got:" >> test-v1
+    echo "curl http://localhost:3000/api/v1/greeting?name=boyone" >> test-v1
+    ```
+
     - Build artifacts
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
+      sh test-v1
       ```
 
     - Commit
     - Push to remote repository
 
-22. `On dev`: `Cherry Pick` the fixed bug commit to dev
+23. `On dev`: `Cherry Pick` the fixed bug commit to dev
 
     ```sh
     git cherry-pick <Commit ID>
     ```
 
     - Solve conflicts
+    - Update test-v2 script
+
+      ```sh
+      echo "echo expected: \n" > test-v2
+      echo 'echo {\"message\":\"Hello boyone!\"}\n' >> test-v2
+      echo "echo got:" >> test-v2
+      echo "curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ \"name\": \"boyone\" }'" >> test-v2
+      ```
+
     - Build artifacts
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
-      curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ "name": "boyone" }'
+      sh test-v1
+      sh test-v2
       ```
 
     - Commit
     - Push to remote repository
 
-23. `On main`: Merge `uat` to `main`
+24. `On main`: Merge `uat` to `main`
 
     - Regression tests
 
@@ -277,7 +343,7 @@
 
     - Push to remote repository
 
-24. `On dev`: Move func HelloText and func HelloJSON to greeting package
+25. `On dev`: Move func HelloText and func HelloJSON to greeting package
 
     ```sh
     mkdir greeting
@@ -306,15 +372,15 @@
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
-      curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ "name": "boyone" }'
+      sh test-v1
+      sh test-v2
       ```
 
     - Commit
     - Push to remote repository
 
-25. Found a bug on main
-26. `On main`: Fixed a bug "add `,` after Hello" on main
+26. Found a bug on main
+27. `On main`: Fixed a bug "add `,` after Hello" on main
 
     ```go
     func HelloText(w http.ResponseWriter, r *http.Request) {
@@ -323,52 +389,70 @@
     }
     ```
 
-    - Solve conflicts
+    - Update test script
+
+      ```sh
+      echo "echo expected: \n" > test-v1
+      echo "echo Hello, boyone\!\n" >> test-v1
+      echo "echo got:" >> test-v1
+      echo "curl http://localhost:3000/api/v1/greeting?name=boyone" >> test-v1
+      ```
+
     - Build artifacts
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
+      sh test-v1
       ```
 
     - Commit
     - Push to remote repository
 
-27. `On uat`: `Cherry Pick` the fixed bug commit fixed bug to `uat`
+28. `On uat`: `Cherry Pick` the fixed bug commit fixed bug to `uat`
 
     - Solve conflicts
     - Build artifacts
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
+      sh test-v1
       ```
 
     - Commit
     - Push to remote repository
 
-28. `On dev`: `Cherry Pick` the fixed bug commit fixed bug to `dev`
+29. `On dev`: `Cherry Pick` the fixed bug commit fixed bug to `dev`
 
     - Solve conflicts
+    - Update test-v2 script
+
+      ```sh
+      echo "echo expected: \n" > test-v2
+      echo 'echo {\"message\":\"Hello, boyone!\"}\n' >> test-v2
+      echo "echo got:" >> test-v2
+      echo "curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ \"name\": \"boyone\" }'" >> test-v2
+      ```
+
     - Build artifacts
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
-      curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ "name": "boyone" }'
+      sh test-v1
+      sh test-v2
       ```
 
     - Commit
     - Push to remote repository
 
-29. `On uat`: Merge `dev` to `uat`
+30. `On uat`: Merge `dev` to `uat`
+
     - Solve conflicts
     - Build artifacts
     - Regression tests
 
       ```sh
-      curl http://localhost:3000/api/v1/greeting?name=boyone
-      curl http://localhost:3000/api/v2/greeting -X POST --data-raw '{ "name": "boyone" }'
+      sh test-v1
+      sh test-v2
       ```
 
     - Commit
