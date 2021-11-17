@@ -38,7 +38,7 @@
    3. Create file call `go.sum`
 
       ```sh
-      touch go.mod
+      touch go.sum
       ```
 
    4. Add following content to `go.sum`
