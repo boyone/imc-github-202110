@@ -40,6 +40,12 @@ java -jar code-maat-1.1-SNAPSHOT-standalone.jar -l data/evo.log -c git -a revisi
 java -jar code-maat-1.1-SNAPSHOT-standalone.jar -l data/evo.log -c git -a coupling
 ```
 
+```sh
+java -jar code-maat-1.1-SNAPSHOT-standalone.jar -l data/evo.log -c git -a coupling --temporal-period 1
+```
+
+> Modules that keep changing together that often over a period of time are probably related.
+
 ### Absolute churn
 
 ```sh
@@ -75,10 +81,3 @@ java -jar code-maat-1.1-SNAPSHOT-standalone.jar -l data/evo.log -c git -a author
 ```sh
 java -jar code-maat-1.1-SNAPSHOT-standalone.jar -l data/evo.log -c git -a main-dev
 ```
-
-## Coupling
-
-- -a soc : top level
-- -a coupling : dig down to the details
-- git clone https://github.com/SirCmpwn/Craft.Net.git
-- https://github.com/ddevault/Craft.Net/graphs/contributors
